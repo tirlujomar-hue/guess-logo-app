@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logo333</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 15px;
+      max-width: 320px;
+      margin: auto;
+    }
+
+    img {
+      width: 120px;
+      margin: 10px;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      background: orange;
+      color: white;
+      border-radius: 10px;
+      margin: 5px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🔥 Logo333</h1>
+<p>Guess the Logo & Earn 💰</p>
+
+<div class="card">
+  <h3>💰 Balance: ₱<span id="balance">30</span></h3>
+  <p>🎯 Games: <span id="games">0</span></p>
+  <p>👥 Invites: <span id="invites">0</span></p>
+
+  <img id="logo" src="" />
+
+  <div id="choices"></div>
+</div>
+
+<script>
+// USER DATA
+let balance = 30;
+let gamesPlayed = 0;
+let invites = 0;
+
+// LOGO QUESTIONS
+const logos = [
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    answer: "Amazon",
+    options: ["Amazon", "Shopee", "Lazada"]
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    answer: "Google",
+    options: ["Yahoo", "Google", "Bing"]
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+    answer: "Netflix",
+    options: ["YouTube", "Netflix", "Hulu"]
+  }
+];
+
+let current = 0;
+
+// LOAD GAME
+function loadGame() {
+  let maxGames = invites >= 5 ? 20 : 10;
+
+  if (gamesPlayed >= maxGames) {
+    alert("🚫 Daily limit reached!");
+    return;
+  }
+
+  let q = logos[current];
+
+  document.getElementById("logo").src = q.img;
+
+  let choicesHTML = "";
+  q.options.forEach(opt => {
+    choicesHTML += `<button onclick="checkAnswer('${opt}')">${opt}</button>`;
+  });
+
+  document.getElementById("choices").innerHTML = choicesHTML;
+}
+
+// CHECK ANSWER
+function checkAnswer(choice) {
+  let correct = logos[current].answer;
+
+  gamesPlayed++;
+
+  if (choice === correct) {
+    let reward = Math.floor(Math.random() * 4) + 7;
+    balance += reward;
+    alert("✅ Correct! ₱" + reward);
+  } else {
+    alert("❌ Wrong answer");
+  }
+
+  updateUI();
+
+  current = (current + 1) % logos.length;
+  loadGame();
+}
+
+// UPDATE UI
+function updateUI() {
+  document.getElementById("balance").innerText = balance;
+  document.getElementById("games").innerText = gamesPlayed;
+  document.getElementById("invites").innerText = invites;
+}
+
+// INVITE SYSTEM
+function invite() {
+  invites++;
+  balance += 33;
+  updateUI();
+  alert("🎉 Invite successful! ₱33 added");
+}
+
+// START GAME
+loadGame();
+</script>
+
+<br>
+<button onclick="invite()">👥 Invite Friends (+₱33)</button>
+
+</body>
+</html>
